@@ -14,7 +14,7 @@ namespace Equipment_Mgmt
 {
     internal class Utils
     {
-        static string DB_PATH= @"C:\db\db.xlsx";
+        static string DB_PATH= @"C:\database\db.xlsx";
 
         public static Person[] persons = new Person[250];
         public static System.Media.SoundPlayer errorSound = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Critical Stop.wav");
@@ -24,7 +24,7 @@ namespace Equipment_Mgmt
         {
             if (!File.Exists(DB_PATH))
             {
-                MessageBox.Show("Database not found: C:\\db\\db.xlsx \nPlease contact IT.");
+                MessageBox.Show("Database not found: C:\\database\\db.xlsx \nPlease contact IT.");
                 return;
             }
 
