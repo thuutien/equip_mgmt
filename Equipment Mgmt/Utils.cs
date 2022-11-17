@@ -1,7 +1,9 @@
 ﻿using Equipment_Mgmt;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
@@ -12,7 +14,7 @@ namespace Equipment_Mgmt
 {
     internal class Utils
     {
-        static string DB_PATH= @"C:\database\db1.xlsx";
+        static string DB_PATH= @"C:\db\db.xlsx";
 
         public static Person[] persons = new Person[250];
         public static System.Media.SoundPlayer errorSound = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Critical Stop.wav");
@@ -20,8 +22,14 @@ namespace Equipment_Mgmt
 
         public static void loadDatabase()
         {
+            if (!File.Exists(DB_PATH))
+            {
+                MessageBox.Show("Database not found: C:\\db\\db.xlsx \nPlease contact IT.");
+                return;
+            }
+
             Excel.Application MyApp = new Excel.Application();
-            MyApp.Visible = false;
+            MyApp.Visible = false; 
             Excel.Workbook MyBook = MyApp.Workbooks.Open(Utils.DB_PATH);
             Excel.Worksheet MySheet = (Excel.Worksheet)MyBook.Sheets[1];
             int lastRow = MySheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell).Row;
