@@ -12,6 +12,7 @@ namespace Equipment_Mgmt
     internal class Utils
     {
         static string DB_PATH= @"C:\database\db.xlsx";
+        static string LOG_PATH = @"C:\database\logs\";
 
         public static Person[] persons = new Person[250];
         public static System.Media.SoundPlayer errorSound = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Critical Stop.wav");
@@ -26,6 +27,13 @@ namespace Equipment_Mgmt
             }
 
             Excel.Application MyApp = new Excel.Application();
+            if (MyApp == null)
+            {
+                Console.WriteLine("Excel is not installed");
+                return;
+            }
+
+            
             MyApp.Visible = false; 
             Excel.Workbook MyBook = MyApp.Workbooks.Open(Utils.DB_PATH);
             Excel.Worksheet MySheet = (Excel.Worksheet)MyBook.Sheets[1];
@@ -67,8 +75,28 @@ namespace Equipment_Mgmt
                 Console.WriteLine("User added: " + Utils.persons[index-2].FirstName);
                 Console.WriteLine("phone added: " + devicelist[0]);
             }
+
             MyApp.Quit();
             Console.WriteLine("Last Row: " + lastRow);
+        }
+
+        public static void logging(string name, string deviceID)
+        {
+            string date = DateTime.Now.ToString("MM-dd-yyyy");
+            string time = DateTime.Now.ToString();
+            string logFile = LOG_PATH + "EquiptVerify-" + date + ".txt";
+            //check file exists?
+            if (!File.Exists(logFile))
+            {
+                Directory.CreateDirectory(LOG_PATH);
+                File.Create(logFile).Close();
+            }
+
+            //get info mation
+            string message = "[" + time + "]" + " -- [Name:" + name + "]  -- [ID:" + deviceID + "]";
+            //write to log file
+            File.AppendAllText(logFile, Environment.NewLine + message);
+
         }
     }
 }

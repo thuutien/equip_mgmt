@@ -60,6 +60,7 @@ namespace Equipment_Mgmt
                             lbl_employeeName.Text = person.FirstName + " " + person.LastName;
                             lbl_employeeName.ForeColor = System.Drawing.Color.DarkGreen;
                             txt_equipID.Clear();
+                            Utils.logging(person.FirstName, eqiptID);
                             return;
                         }           
                     }
@@ -71,6 +72,7 @@ namespace Equipment_Mgmt
             pic_profile.Image = Properties.Resources.error;
             lbl_employeeName.Text = "WARNING! No User Found!!";
             lbl_employeeName.ForeColor = System.Drawing.Color.Red;
+            Utils.logging("FAILED", eqiptID);
             txt_equipID.Clear();
         }
 
