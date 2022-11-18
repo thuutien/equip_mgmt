@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
+using System.IO;
 using System.Windows.Forms;
-
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Equipment_Mgmt
 {
@@ -50,7 +50,13 @@ namespace Equipment_Mgmt
                         {
                             //Passed
                             Utils.passSound.Play();
-                            pic_profile.Image = Properties.Resources.user;
+                            if (File.Exists(@"C:\database\profile\" + person.FirstName + ".jpg"))
+                            {
+                                pic_profile.Image = System.Drawing.Image.FromFile(@"C:\database\profile\" + person.FirstName + ".jpg");
+                            }else
+                            {
+                                pic_profile.Image = Properties.Resources.user;
+                            }
                             lbl_employeeName.Text = person.FirstName + " " + person.LastName;
                             lbl_employeeName.ForeColor = System.Drawing.Color.DarkGreen;
                             txt_equipID.Clear();
@@ -66,7 +72,6 @@ namespace Equipment_Mgmt
             lbl_employeeName.Text = "WARNING! No User Found!!";
             lbl_employeeName.ForeColor = System.Drawing.Color.Red;
             txt_equipID.Clear();
-           
         }
 
 
@@ -78,6 +83,11 @@ namespace Equipment_Mgmt
         }
 
         private void lbl_employeeName_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pic_profile_Click(object sender, EventArgs e)
         {
 
         }

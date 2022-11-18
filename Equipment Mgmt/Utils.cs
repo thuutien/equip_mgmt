@@ -1,8 +1,5 @@
-﻿using Equipment_Mgmt;
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -40,6 +37,7 @@ namespace Equipment_Mgmt
                 string[] devicelist = new String[5];
                 if (MyValues.GetValue(1, 1) == null)
                 {
+                    MyApp.Quit();
                     break;
                 }
                 string lastName = MyValues.GetValue(1, 1).ToString();
@@ -69,7 +67,7 @@ namespace Equipment_Mgmt
                 Console.WriteLine("User added: " + Utils.persons[index-2].FirstName);
                 Console.WriteLine("phone added: " + devicelist[0]);
             }
-
+            MyApp.Quit();
             Console.WriteLine("Last Row: " + lastRow);
         }
     }
