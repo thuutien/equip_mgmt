@@ -71,11 +71,11 @@
             this.lbl_employeeName.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lbl_employeeName.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_employeeName.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.lbl_employeeName.Location = new System.Drawing.Point(0, 609);
+            this.lbl_employeeName.Location = new System.Drawing.Point(0, 605);
             this.lbl_employeeName.Margin = new System.Windows.Forms.Padding(3, 0, 3, 30);
             this.lbl_employeeName.Name = "lbl_employeeName";
             this.lbl_employeeName.Padding = new System.Windows.Forms.Padding(0, 0, 0, 100);
-            this.lbl_employeeName.Size = new System.Drawing.Size(1052, 176);
+            this.lbl_employeeName.Size = new System.Drawing.Size(1048, 176);
             this.lbl_employeeName.TabIndex = 3;
             this.lbl_employeeName.Text = "Employee Name";
             this.lbl_employeeName.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -104,10 +104,10 @@
             // pic_profile
             // 
             this.pic_profile.Image = global::Equipment_Mgmt.Properties.Resources.user;
-            this.pic_profile.Location = new System.Drawing.Point(330, 257);
+            this.pic_profile.Location = new System.Drawing.Point(311, 253);
             this.pic_profile.Name = "pic_profile";
-            this.pic_profile.Size = new System.Drawing.Size(378, 349);
-            this.pic_profile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pic_profile.Size = new System.Drawing.Size(445, 349);
+            this.pic_profile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pic_profile.TabIndex = 4;
             this.pic_profile.TabStop = false;
             this.pic_profile.Click += new System.EventHandler(this.pic_profile_Click);
@@ -116,7 +116,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1052, 785);
+            this.ClientSize = new System.Drawing.Size(1048, 781);
             this.ControlBox = false;
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lbl_scanned);

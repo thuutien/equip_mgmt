@@ -67,12 +67,13 @@ namespace Equipment_Mgmt
 
                 }
             }
+
             //Failed
             Utils.errorSound.Play();
             pic_profile.Image = Properties.Resources.error;
             lbl_employeeName.Text = "WARNING! No User Found!!";
             lbl_employeeName.ForeColor = System.Drawing.Color.Red;
-            Utils.logging("FAILED", eqiptID);
+            Utils.logging("USER FAILED", eqiptID);
             txt_equipID.Clear();
         }
 
