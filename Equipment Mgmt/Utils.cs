@@ -41,8 +41,8 @@ namespace Equipment_Mgmt
 
             for (int index = 2; index <= lastRow; index++)
             {
-                System.Array MyValues = (System.Array)MySheet.get_Range("A" + index.ToString(), "G" + index.ToString()).Cells.Value;
-                string[] devicelist = new String[5];
+                System.Array MyValues = (System.Array)MySheet.get_Range("A" + index.ToString(), "I" + index.ToString()).Cells.Value;
+                string[] devicelist = new String[7];
                 if (MyValues.GetValue(1, 1) == null)
                 {
                     MyApp.Quit();
@@ -68,12 +68,20 @@ namespace Equipment_Mgmt
                 }
                 if (MyValues.GetValue(1, 7) != null)
                 {
-                    devicelist[3] = MyValues.GetValue(1, 7).ToString();
+                    devicelist[4] = MyValues.GetValue(1, 7).ToString();
+                }
+                if (MyValues.GetValue(1, 8) != null)
+                {
+                    devicelist[5] = MyValues.GetValue(1, 8).ToString();
+                }
+                if (MyValues.GetValue(1, 9) != null)
+                {
+                    devicelist[6] = MyValues.GetValue(1, 9).ToString();
                 }
 
                 Utils.persons[index - 2] = new Person(firstName, lastName, devicelist);
                 Console.WriteLine("User added: " + Utils.persons[index-2].FirstName);
-                Console.WriteLine("phone added: " + devicelist[0]);
+                Console.WriteLine("phone added: " + devicelist[6]);
             }
 
             MyApp.Quit();
