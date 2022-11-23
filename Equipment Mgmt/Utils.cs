@@ -41,8 +41,8 @@ namespace Equipment_Mgmt
 
             for (int index = 2; index <= lastRow; index++)
             {
-                System.Array MyValues = (System.Array)MySheet.get_Range("A" + index.ToString(), "I" + index.ToString()).Cells.Value;
-                string[] devicelist = new String[7];
+                System.Array MyValues = (System.Array)MySheet.get_Range("A" + index.ToString(), "O" + index.ToString()).Cells.Value;
+                string[] devicelist = new String[12];
                 if (MyValues.GetValue(1, 1) == null)
                 {
                     MyApp.Quit();
@@ -78,10 +78,35 @@ namespace Equipment_Mgmt
                 {
                     devicelist[6] = MyValues.GetValue(1, 9).ToString();
                 }
+                if (MyValues.GetValue(1, 10) != null)
+                {
+                    devicelist[7] = MyValues.GetValue(1, 10).ToString();
+                }
+                if (MyValues.GetValue(1, 11) != null)
+                {
+                    devicelist[8] = MyValues.GetValue(1, 11).ToString();
+                }
+                if (MyValues.GetValue(1, 12) != null)
+                {
+                    devicelist[9] = MyValues.GetValue(1, 12).ToString();
+                }
+                if (MyValues.GetValue(1, 13) != null)
+                {
+                    devicelist[10] = MyValues.GetValue(1, 13).ToString();
+                }
+                if (MyValues.GetValue(1, 14) != null)
+                {
+                    devicelist[11] = MyValues.GetValue(1, 14).ToString();
+                }
+                if (MyValues.GetValue(1, 15) != null)
+                {
+                    devicelist[12] = MyValues.GetValue(1, 15).ToString();
+                }
+
 
                 Utils.persons[index - 2] = new Person(firstName, lastName, devicelist);
                 Console.WriteLine("User added: " + Utils.persons[index-2].FirstName);
-                Console.WriteLine("phone added: " + devicelist[6]);
+                Console.WriteLine("phone added: " + devicelist[5]);
             }
 
             MyApp.Quit();

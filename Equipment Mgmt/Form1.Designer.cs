@@ -43,20 +43,20 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.label1.Location = new System.Drawing.Point(216, 60);
+            this.label1.Location = new System.Drawing.Point(267, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(642, 55);
+            this.label1.Size = new System.Drawing.Size(849, 73);
             this.label1.TabIndex = 0;
             this.label1.Text = "Scan IMEI/SN here to verify";
             // 
             // txt_equipID
             // 
             this.txt_equipID.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_equipID.Location = new System.Drawing.Point(217, 118);
+            this.txt_equipID.Location = new System.Drawing.Point(296, 115);
             this.txt_equipID.Name = "txt_equipID";
-            this.txt_equipID.Size = new System.Drawing.Size(641, 62);
+            this.txt_equipID.Size = new System.Drawing.Size(794, 62);
             this.txt_equipID.TabIndex = 1;
             this.txt_equipID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txt_equipID.TextChanged += new System.EventHandler(this.txt_equipID_TextChanged);
@@ -69,13 +69,13 @@
             // lbl_employeeName
             // 
             this.lbl_employeeName.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lbl_employeeName.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_employeeName.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_employeeName.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.lbl_employeeName.Location = new System.Drawing.Point(0, 605);
+            this.lbl_employeeName.Location = new System.Drawing.Point(0, 688);
             this.lbl_employeeName.Margin = new System.Windows.Forms.Padding(3, 0, 3, 30);
             this.lbl_employeeName.Name = "lbl_employeeName";
             this.lbl_employeeName.Padding = new System.Windows.Forms.Padding(0, 0, 0, 100);
-            this.lbl_employeeName.Size = new System.Drawing.Size(1048, 176);
+            this.lbl_employeeName.Size = new System.Drawing.Size(1330, 211);
             this.lbl_employeeName.TabIndex = 3;
             this.lbl_employeeName.Text = "Employee Name";
             this.lbl_employeeName.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -85,7 +85,7 @@
             // 
             this.lbl_scanned.AutoSize = true;
             this.lbl_scanned.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_scanned.Location = new System.Drawing.Point(116, 756);
+            this.lbl_scanned.Location = new System.Drawing.Point(113, 868);
             this.lbl_scanned.Name = "lbl_scanned";
             this.lbl_scanned.Size = new System.Drawing.Size(21, 20);
             this.lbl_scanned.TabIndex = 6;
@@ -95,7 +95,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 756);
+            this.label2.Location = new System.Drawing.Point(9, 868);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(98, 20);
             this.label2.TabIndex = 7;
@@ -104,9 +104,9 @@
             // pic_profile
             // 
             this.pic_profile.Image = global::Equipment_Mgmt.Properties.Resources.user;
-            this.pic_profile.Location = new System.Drawing.Point(311, 253);
+            this.pic_profile.Location = new System.Drawing.Point(363, 211);
             this.pic_profile.Name = "pic_profile";
-            this.pic_profile.Size = new System.Drawing.Size(445, 349);
+            this.pic_profile.Size = new System.Drawing.Size(600, 487);
             this.pic_profile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pic_profile.TabIndex = 4;
             this.pic_profile.TabStop = false;
@@ -116,7 +116,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1048, 781);
+            this.ClientSize = new System.Drawing.Size(1330, 899);
             this.ControlBox = false;
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lbl_scanned);
