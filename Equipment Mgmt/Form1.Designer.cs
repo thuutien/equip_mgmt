@@ -37,6 +37,8 @@
             this.lbl_scanned = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.pic_profile = new System.Windows.Forms.PictureBox();
+            this.lbl_title = new System.Windows.Forms.Label();
+            this.lbl_bypass = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pic_profile)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,8 +46,8 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.label1.Location = new System.Drawing.Point(267, 9);
+            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.Location = new System.Drawing.Point(283, 37);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(849, 73);
             this.label1.TabIndex = 0;
@@ -54,9 +56,9 @@
             // txt_equipID
             // 
             this.txt_equipID.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_equipID.Location = new System.Drawing.Point(296, 115);
+            this.txt_equipID.Location = new System.Drawing.Point(166, 140);
             this.txt_equipID.Name = "txt_equipID";
-            this.txt_equipID.Size = new System.Drawing.Size(794, 62);
+            this.txt_equipID.Size = new System.Drawing.Size(1132, 62);
             this.txt_equipID.TabIndex = 1;
             this.txt_equipID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txt_equipID.TextChanged += new System.EventHandler(this.txt_equipID_TextChanged);
@@ -68,17 +70,16 @@
             // 
             // lbl_employeeName
             // 
-            this.lbl_employeeName.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lbl_employeeName.AutoSize = true;
             this.lbl_employeeName.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_employeeName.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.lbl_employeeName.Location = new System.Drawing.Point(0, 688);
+            this.lbl_employeeName.Location = new System.Drawing.Point(618, 398);
             this.lbl_employeeName.Margin = new System.Windows.Forms.Padding(3, 0, 3, 30);
             this.lbl_employeeName.Name = "lbl_employeeName";
-            this.lbl_employeeName.Padding = new System.Windows.Forms.Padding(0, 0, 0, 100);
-            this.lbl_employeeName.Size = new System.Drawing.Size(1330, 211);
+            this.lbl_employeeName.Size = new System.Drawing.Size(519, 73);
             this.lbl_employeeName.TabIndex = 3;
             this.lbl_employeeName.Text = "Employee Name";
-            this.lbl_employeeName.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.lbl_employeeName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_employeeName.Click += new System.EventHandler(this.lbl_employeeName_Click);
             // 
             // lbl_scanned
@@ -104,20 +105,47 @@
             // pic_profile
             // 
             this.pic_profile.Image = global::Equipment_Mgmt.Properties.Resources.user;
-            this.pic_profile.Location = new System.Drawing.Point(363, 211);
+            this.pic_profile.Location = new System.Drawing.Point(13, 284);
             this.pic_profile.Name = "pic_profile";
-            this.pic_profile.Size = new System.Drawing.Size(600, 487);
+            this.pic_profile.Size = new System.Drawing.Size(599, 487);
             this.pic_profile.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pic_profile.TabIndex = 4;
             this.pic_profile.TabStop = false;
             this.pic_profile.Click += new System.EventHandler(this.pic_profile_Click);
             // 
+            // lbl_title
+            // 
+            this.lbl_title.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_title.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.lbl_title.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.lbl_title.Location = new System.Drawing.Point(618, 501);
+            this.lbl_title.Margin = new System.Windows.Forms.Padding(3, 0, 3, 30);
+            this.lbl_title.Name = "lbl_title";
+            this.lbl_title.Size = new System.Drawing.Size(881, 74);
+            this.lbl_title.TabIndex = 8;
+            this.lbl_title.Text = "Title";
+            // 
+            // lbl_bypass
+            // 
+            this.lbl_bypass.Font = new System.Drawing.Font("Elephant", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_bypass.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.lbl_bypass.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.lbl_bypass.Location = new System.Drawing.Point(618, 605);
+            this.lbl_bypass.Margin = new System.Windows.Forms.Padding(3, 0, 3, 30);
+            this.lbl_bypass.Name = "lbl_bypass";
+            this.lbl_bypass.Size = new System.Drawing.Size(881, 74);
+            this.lbl_bypass.TabIndex = 9;
+            this.lbl_bypass.Text = "...";
+            this.lbl_bypass.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1330, 899);
+            this.ClientSize = new System.Drawing.Size(1511, 895);
             this.ControlBox = false;
+            this.Controls.Add(this.lbl_bypass);
+            this.Controls.Add(this.lbl_title);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lbl_scanned);
             this.Controls.Add(this.pic_profile);
@@ -145,6 +173,8 @@
         private System.Windows.Forms.PictureBox pic_profile;
         private System.Windows.Forms.Label lbl_scanned;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lbl_title;
+        private System.Windows.Forms.Label lbl_bypass;
     }
 }
 

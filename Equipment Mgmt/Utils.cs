@@ -14,7 +14,8 @@ namespace Equipment_Mgmt
         static string DB_PATH= @"C:\database\db.xlsx";
         static string LOG_PATH = @"C:\database\logs\";
 
-        public static Person[] persons = new Person[250];
+        
+        public static Person[] persons = new Person[1000];
         public static System.Media.SoundPlayer errorSound = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Critical Stop.wav");
         public static System.Media.SoundPlayer passSound = new System.Media.SoundPlayer(@"C:\Windows\Media\tada.wav");
 
@@ -41,7 +42,7 @@ namespace Equipment_Mgmt
 
             for (int index = 2; index <= lastRow; index++)
             {
-                System.Array MyValues = (System.Array)MySheet.get_Range("A" + index.ToString(), "O" + index.ToString()).Cells.Value;
+                System.Array MyValues = (System.Array)MySheet.get_Range("A" + index.ToString(), "P" + index.ToString()).Cells.Value;
                 string[] devicelist = new String[12];
                 if (MyValues.GetValue(1, 1) == null)
                 {
@@ -50,67 +51,74 @@ namespace Equipment_Mgmt
                 }
                 string lastName = MyValues.GetValue(1, 1).ToString();
                 string firstName = MyValues.GetValue(1, 2).ToString();
-                if(MyValues.GetValue(1, 3) != null)
+                string title = "";
+                if (MyValues.GetValue(1, 3) != null)
                 {
-                    devicelist[0] = MyValues.GetValue(1, 3).ToString();
+                    title = MyValues.GetValue(1, 3).ToString();
                 }
+
                 if (MyValues.GetValue(1, 4) != null)
                 {
-                    devicelist[1] = MyValues.GetValue(1, 4).ToString();
+                    devicelist[0] = MyValues.GetValue(1, 4).ToString();
                 }
                 if (MyValues.GetValue(1, 5) != null)
                 {
-                    devicelist[2] = MyValues.GetValue(1, 5).ToString();
+                    devicelist[1] = MyValues.GetValue(1, 5).ToString();
                 }
                 if (MyValues.GetValue(1, 6) != null)
                 {
-                    devicelist[3] = MyValues.GetValue(1, 6).ToString();
+                    devicelist[2] = MyValues.GetValue(1, 6).ToString();
                 }
                 if (MyValues.GetValue(1, 7) != null)
                 {
-                    devicelist[4] = MyValues.GetValue(1, 7).ToString();
+                    devicelist[3] = MyValues.GetValue(1, 7).ToString();
                 }
                 if (MyValues.GetValue(1, 8) != null)
                 {
-                    devicelist[5] = MyValues.GetValue(1, 8).ToString();
+                    devicelist[4] = MyValues.GetValue(1, 8).ToString();
                 }
                 if (MyValues.GetValue(1, 9) != null)
                 {
-                    devicelist[6] = MyValues.GetValue(1, 9).ToString();
+                    devicelist[5] = MyValues.GetValue(1, 9).ToString();
                 }
                 if (MyValues.GetValue(1, 10) != null)
                 {
-                    devicelist[7] = MyValues.GetValue(1, 10).ToString();
+                    devicelist[6] = MyValues.GetValue(1, 10).ToString();
                 }
                 if (MyValues.GetValue(1, 11) != null)
                 {
-                    devicelist[8] = MyValues.GetValue(1, 11).ToString();
+                    devicelist[7] = MyValues.GetValue(1, 11).ToString();
                 }
                 if (MyValues.GetValue(1, 12) != null)
                 {
-                    devicelist[9] = MyValues.GetValue(1, 12).ToString();
+                    devicelist[8] = MyValues.GetValue(1, 12).ToString();
                 }
                 if (MyValues.GetValue(1, 13) != null)
                 {
-                    devicelist[10] = MyValues.GetValue(1, 13).ToString();
+                    devicelist[9] = MyValues.GetValue(1, 13).ToString();
                 }
                 if (MyValues.GetValue(1, 14) != null)
                 {
-                    devicelist[11] = MyValues.GetValue(1, 14).ToString();
+                    devicelist[10] = MyValues.GetValue(1, 14).ToString();
                 }
                 if (MyValues.GetValue(1, 15) != null)
                 {
-                    devicelist[12] = MyValues.GetValue(1, 15).ToString();
+                    devicelist[11] = MyValues.GetValue(1, 15).ToString();
+                }
+                if (MyValues.GetValue(1, 16) != null)
+                {
+                    devicelist[12] = MyValues.GetValue(1, 16).ToString();
                 }
 
 
-                Utils.persons[index - 2] = new Person(firstName, lastName, devicelist);
+                Utils.persons[index - 2] = new Person(firstName, lastName, title, devicelist);
                 Console.WriteLine("User added: " + Utils.persons[index-2].FirstName);
                 Console.WriteLine("phone added: " + devicelist[5]);
             }
 
             MyApp.Quit();
             Console.WriteLine("Last Row: " + lastRow);
+            Utils.logging("Users loaded:" + (lastRow - 1), "System Operation");
         }
 
         public static void logging(string name, string deviceID)
@@ -131,5 +139,8 @@ namespace Equipment_Mgmt
             File.AppendAllText(logFile, Environment.NewLine + message);
 
         }
+
+
+
     }
 }

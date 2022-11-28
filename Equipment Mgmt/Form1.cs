@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace Equipment_Mgmt
@@ -30,6 +31,7 @@ namespace Equipment_Mgmt
 
             //load database
             Utils.loadDatabase();
+            
 
         }
 
@@ -48,6 +50,7 @@ namespace Equipment_Mgmt
                         if (id == eqiptID)
                         {
                             //Passed
+                            checkTitles(person);
                             Utils.passSound.Play();
                             if (File.Exists(@"C:\database\profile\" + person.FirstName + ".jpg"))
                             {
@@ -73,7 +76,28 @@ namespace Equipment_Mgmt
             lbl_employeeName.Text = "WARNING! No User Found!!";
             lbl_employeeName.ForeColor = System.Drawing.Color.Red;
             Utils.logging("USER FAILED", eqiptID);
+            lbl_title.Text = "";
+            lbl_bypass.Text = "";
             txt_equipID.Clear();
+        }
+
+        private void checkTitles(Person person)
+        {
+            if (person.Title != null && person.Title != "")
+            {
+                lbl_title.Text = "EXECUTIVE: " + person.Title;
+                lbl_bypass.Text = "SECURITY BYPASS";
+                lbl_title.ForeColor = Color.Blue;
+                lbl_bypass.ForeColor = Color.Red;
+
+            }
+            else
+            {
+                lbl_title.Text = "Employee";
+                lbl_title.ForeColor = Color.Black;
+                lbl_bypass.Text = "";
+            }
+
         }
 
 
