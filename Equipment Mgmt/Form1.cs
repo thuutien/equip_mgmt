@@ -19,6 +19,7 @@ namespace Equipment_Mgmt
 
         private void initialTaks()
         {   
+            
             //Add enter event for textbox
             txt_equipID.KeyPress += (sndr, ev) =>
             {
@@ -29,6 +30,7 @@ namespace Equipment_Mgmt
                 }
             };
 
+            
             //load database
             Utils.loadDatabase();
             
@@ -116,6 +118,27 @@ namespace Equipment_Mgmt
         private void pic_profile_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void lbl_title_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void ssToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn_update_Click(object sender, EventArgs e)
+        {
+            Utils.updateDB();
+            Utils.loadDatabase();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Management.Automation;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -23,7 +24,7 @@ namespace Equipment_Mgmt
         {
             if (!File.Exists(DB_PATH))
             {
-                MessageBox.Show("Database not found: C:\\database\\db.xlsx \nPlease contact IT.");
+                MessageBox.Show("Database not found: C:\\database\\db.xlsx \nPlease Update database or contact IT.");
                 return;
             }
 
@@ -138,6 +139,26 @@ namespace Equipment_Mgmt
             //write to log file
             File.AppendAllText(logFile, Environment.NewLine + message);
 
+        }
+
+        public static void updateDB()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            string script = @"$secPassword = ConvertTo-SecureString ""G00dm@stertronic"" -AsPlainText -Force
+$cred = new-object -typename System.Management.Automation.PSCredential -argumentlist Administrator, $secPassword
+New-PSDrive -Name Z -PSProvider FileSystem -Root \\192.168.64.2\security$ -Credential $cred -Persist";
+
+
+            PowerShell ps = PowerShell.Create();
+
+            ps.AddScript(script);
+            ps.Invoke();
+            ps.AddScript(@"robocopy Z:\database C:\database /e /v");
+            ps.Invoke();
+            ps.AddScript(@"net use Z: /delete");
+            ps.Invoke();
+            Cursor.Current = Cursors.Default;
+            MessageBox.Show("Update completed!");
         }
 
 
