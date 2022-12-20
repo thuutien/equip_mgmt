@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Equipment_Mgmt
@@ -27,6 +28,7 @@ namespace Equipment_Mgmt
                 {
                     locateUser(txt_equipID.Text);
                     ev.Handled = true;
+                    
                 }
             };
 
