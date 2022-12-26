@@ -66,7 +66,8 @@ namespace Equipment_Mgmt
                             lbl_employeeName.Text = person.FirstName + " " + person.LastName;
                             lbl_employeeName.ForeColor = System.Drawing.Color.DarkGreen;
                             txt_equipID.Clear();
-                            Utils.logging(person.FirstName, eqiptID);
+                            //Utils.logging(person.FirstName, eqiptID);
+                            Utils.recordTime(person.FirstName + " " + person.LastName); 
                             return;
                         }           
                     }
@@ -141,6 +142,7 @@ namespace Equipment_Mgmt
         {
             Utils.updateDB();
             Utils.loadDatabase();
+
         }
     }
 }

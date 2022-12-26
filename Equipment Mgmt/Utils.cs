@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Excel;
+using System;
 using System.IO;
 using System.Management.Automation;
 using System.Windows.Forms;
@@ -14,8 +15,10 @@ namespace Equipment_Mgmt
     {
         static string DB_PATH= @"C:\database\db.xlsx";
         static string LOG_PATH = @"C:\database\logs\";
+        static string RP_PATH = @"X:\";
+            
 
-        
+
         public static Person[] persons = new Person[1000];
         public static System.Media.SoundPlayer errorSound = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Critical Stop.wav");
         public static System.Media.SoundPlayer passSound = new System.Media.SoundPlayer(@"C:\Windows\Media\tada.wav");
@@ -159,6 +162,79 @@ New-PSDrive -Name Z -PSProvider FileSystem -Root \\192.168.64.2\security$ -Crede
             ps.Invoke();
             Cursor.Current = Cursors.Default;
             MessageBox.Show("Update completed!");
+        }
+
+        public static void recordTime(string name)
+        {
+
+            bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null ? true : false;
+            if(!isExcelInstalled)
+            {
+                MessageBox.Show("Excel is not installed!");
+                return;
+            }
+
+            //Connect to file server
+            string script = @"$secPassword = ConvertTo-SecureString ""G00dm@stertronic"" -AsPlainText -Force
+$cred = new-object -typename System.Management.Automation.PSCredential -argumentlist Administrator, $secPassword
+New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Credential $cred -Persist";
+
+            PowerShell ps = PowerShell.Create();
+            ps.AddScript(script);
+            ps.Invoke();
+
+
+
+            // If the report exists for today? create!
+            string date = DateTime.Now.ToString("yyyy-MM-dd-dddd");
+            string reportFile = @"X:\" + "AttendanceReport-" + date + ".xlsx";
+            Excel.Application excel = new Excel.Application();
+
+
+            if (!File.Exists(reportFile))
+            {
+                // Create new file here
+                Workbook wbook = excel.Workbooks.Add(XlWBATemplate.xlWBATWorksheet);
+                Worksheet wsheet = wbook.Worksheets.get_Item(1);
+                wsheet.Name = "Report";
+                wsheet.Cells[1, 1] = "Name";
+                wsheet.Cells[1, 2] = "Clock In";
+                wsheet.Cells[1, 3] = "Clock Out";
+                wbook.SaveAs(reportFile);
+                Console.WriteLine("File created: " + reportFile);
+            }
+
+            Console.WriteLine("laoding file");
+            Workbook wb = excel.Workbooks.Open(reportFile);
+            Worksheet ws = wb.Worksheets[1];
+            var range = (Excel.Range)ws.Columns["A:A"];
+            var result = range.Find(name, LookAt: Excel.XlLookAt.xlWhole);
+
+            if (result != null)
+            {
+                var row = result.Row;
+                ws.Cells[row,3].Value = DateTime.Now.ToString("hh:mm:ss");
+                wb.Save();
+
+            } else
+            {
+                // cannot find the name
+                //add to last row with clock in
+                int lastRow = ws.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell).Row + 1;
+                Console.WriteLine("last Row: " + lastRow);
+                ws.Cells[lastRow,1].Value = name;
+                ws.Cells[lastRow,2].Value = DateTime.Now.ToString("hh:mm:ss");
+                
+                wb.Save();
+
+            }
+
+            
+            wb.Close();
+            excel.Quit();
+            ps.AddScript(@"net use X: /delete");
+            ps.Invoke();
+            ps.Dispose();
         }
 
 
