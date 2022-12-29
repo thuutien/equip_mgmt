@@ -67,7 +67,9 @@ namespace Equipment_Mgmt
                             lbl_employeeName.ForeColor = System.Drawing.Color.DarkGreen;
                             txt_equipID.Clear();
                             //Utils.logging(person.FirstName, eqiptID);
-                            Utils.recordTime(person.FirstName + " " + person.LastName); 
+                            Utils.recordTime(person.FirstName + " " + person.LastName);
+                            //Utils.logging(person.FirstName, eqiptID);
+                             
                             return;
                         }           
                     }

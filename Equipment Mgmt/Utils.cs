@@ -16,9 +16,9 @@ namespace Equipment_Mgmt
         static string DB_PATH= @"C:\database\db.xlsx";
         static string LOG_PATH = @"C:\database\logs\";
         static string RP_PATH = @"X:\";
-            
 
 
+        static public Excel.Application excel = new Excel.Application();
         public static Person[] persons = new Person[1000];
         public static System.Media.SoundPlayer errorSound = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Critical Stop.wav");
         public static System.Media.SoundPlayer passSound = new System.Media.SoundPlayer(@"C:\Windows\Media\tada.wav");
@@ -31,16 +31,16 @@ namespace Equipment_Mgmt
                 return;
             }
 
-            Excel.Application MyApp = new Excel.Application();
-            if (MyApp == null)
+            
+            if (excel == null)
             {
                 Console.WriteLine("Excel is not installed");
                 return;
             }
 
             
-            MyApp.Visible = false; 
-            Excel.Workbook MyBook = MyApp.Workbooks.Open(Utils.DB_PATH);
+            excel.Visible = false; 
+            Excel.Workbook MyBook = excel.Workbooks.Open(Utils.DB_PATH);
             Excel.Worksheet MySheet = (Excel.Worksheet)MyBook.Sheets[1];
             int lastRow = MySheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell).Row;
 
@@ -50,7 +50,6 @@ namespace Equipment_Mgmt
                 string[] devicelist = new String[12];
                 if (MyValues.GetValue(1, 1) == null)
                 {
-                    MyApp.Quit();
                     break;
                 }
                 string lastName = MyValues.GetValue(1, 1).ToString();
@@ -120,7 +119,6 @@ namespace Equipment_Mgmt
                 Console.WriteLine("phone added: " + devicelist[5]);
             }
 
-            MyApp.Quit();
             Console.WriteLine("Last Row: " + lastRow);
             Utils.logging("Users loaded:" + (lastRow - 1), "System Operation");
         }
@@ -166,7 +164,6 @@ New-PSDrive -Name Z -PSProvider FileSystem -Root \\192.168.64.2\security$ -Crede
 
         public static void recordTime(string name)
         {
-
             bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null ? true : false;
             if(!isExcelInstalled)
             {
@@ -183,13 +180,10 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
             ps.AddScript(script);
             ps.Invoke();
 
-
-
             // If the report exists for today? create!
             string date = DateTime.Now.ToString("yyyy-MM-dd-dddd");
             string reportFile = @"X:\" + "AttendanceReport-" + date + ".xlsx";
-            Excel.Application excel = new Excel.Application();
-
+            
 
             if (!File.Exists(reportFile))
             {
@@ -200,11 +194,19 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                 wsheet.Cells[1, 1] = "Name";
                 wsheet.Cells[1, 2] = "Clock In";
                 wsheet.Cells[1, 3] = "Clock Out";
+
+                //fix time issue
+                FormatCondition condIn = wsheet.get_Range("B2:B500", Type.Missing).FormatConditions.Add(XlFormatConditionType.xlCellValue, XlFormatConditionOperator.xlGreater, "0.333333333333333");
+                FormatCondition condOut = wsheet.get_Range("C2:C500", Type.Missing).FormatConditions.Add(XlFormatConditionType.xlCellValue, XlFormatConditionOperator.xlLess, "0.708333333333333");
+                condIn.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
+                condOut.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
+
+
                 wbook.SaveAs(reportFile);
-                Console.WriteLine("File created: " + reportFile);
+                Console.WriteLine("File created");
             }
 
-            Console.WriteLine("laoding file");
+            Console.WriteLine("loading file...");
             Workbook wb = excel.Workbooks.Open(reportFile);
             Worksheet ws = wb.Worksheets[1];
             var range = (Excel.Range)ws.Columns["A:A"];
@@ -213,8 +215,11 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
             if (result != null)
             {
                 var row = result.Row;
-                ws.Cells[row,3].Value = DateTime.Now.ToString("hh:mm:ss");
+                ws.Cells[row,3].Value = DateTime.Now.ToString("HH:mm:ss:");
                 wb.Save();
+                wb.Close();
+
+
 
             } else
             {
@@ -223,20 +228,17 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                 int lastRow = ws.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell).Row + 1;
                 Console.WriteLine("last Row: " + lastRow);
                 ws.Cells[lastRow,1].Value = name;
-                ws.Cells[lastRow,2].Value = DateTime.Now.ToString("hh:mm:ss");
+                ws.Cells[lastRow,2].Value = DateTime.Now.ToString("HH:mm:ss");
                 
                 wb.Save();
+                wb.Close();
 
             }
 
-            
-            wb.Close();
-            excel.Quit();
             ps.AddScript(@"net use X: /delete");
             ps.Invoke();
             ps.Dispose();
         }
-
 
 
     }
