@@ -194,8 +194,9 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                 wsheet.Cells[1, 1] = "Name";
                 wsheet.Cells[1, 2] = "Clock In";
                 wsheet.Cells[1, 3] = "Clock Out";
+                wsheet.Columns["A:A"].ColumnWidth = 30;
+                wsheet.Columns["B:C"].ColumnWidth = 10;
 
-                //fix time issue
                 FormatCondition condIn = wsheet.get_Range("B2:B500", Type.Missing).FormatConditions.Add(XlFormatConditionType.xlCellValue, XlFormatConditionOperator.xlGreater, "0.333333333333333");
                 FormatCondition condOut = wsheet.get_Range("C2:C500", Type.Missing).FormatConditions.Add(XlFormatConditionType.xlCellValue, XlFormatConditionOperator.xlLess, "0.708333333333333");
                 condIn.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
@@ -204,6 +205,7 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
 
                 wbook.SaveAs(reportFile);
                 Console.WriteLine("File created");
+                
             }
 
             Console.WriteLine("loading file...");
