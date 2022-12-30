@@ -154,7 +154,7 @@ New-PSDrive -Name Z -PSProvider FileSystem -Root \\192.168.64.2\security$ -Crede
 
             ps.AddScript(script);
             ps.Invoke();
-            ps.AddScript(@"robocopy Z:\database C:\database /e /v");
+            ps.AddScript(@"robocopy Z:\database C:\database /e");
             ps.Invoke();
             ps.AddScript(@"net use Z: /delete");
             ps.Invoke();
