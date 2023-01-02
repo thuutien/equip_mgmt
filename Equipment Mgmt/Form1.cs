@@ -47,10 +47,10 @@ namespace Equipment_Mgmt
             {
                 if (person != null)
                 {
-                    Console.WriteLine("loop person: " + person.FirstName);
+                    
                     foreach (string id in person.Devices)
                     {
-                        Console.WriteLine("loop ID: " + id);
+                        
                         if (id == eqiptID)
                         {
                             //Passed

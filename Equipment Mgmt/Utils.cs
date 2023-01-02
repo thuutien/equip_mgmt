@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -115,11 +116,11 @@ namespace Equipment_Mgmt
 
 
                 Utils.persons[index - 2] = new Person(firstName, lastName, title, devicelist);
-                Console.WriteLine("User added: " + Utils.persons[index-2].FirstName);
-                Console.WriteLine("phone added: " + devicelist[5]);
+                //Console.WriteLine("User added: " + Utils.persons[index-2].FirstName);
+                //Console.WriteLine("phone added: " + devicelist[5]);
             }
 
-            Console.WriteLine("Last Row: " + lastRow);
+            Console.WriteLine("Database Last Row: " + lastRow);
             Utils.logging("Users loaded:" + (lastRow - 1), "System Operation");
         }
 
@@ -144,13 +145,12 @@ namespace Equipment_Mgmt
 
         public static void updateDB()
         {
+            PowerShell ps = PowerShell.Create();
+
             Cursor.Current = Cursors.WaitCursor;
             string script = @"$secPassword = ConvertTo-SecureString ""G00dm@stertronic"" -AsPlainText -Force
 $cred = new-object -typename System.Management.Automation.PSCredential -argumentlist Administrator, $secPassword
 New-PSDrive -Name Z -PSProvider FileSystem -Root \\192.168.64.2\security$ -Credential $cred -Persist";
-
-
-            PowerShell ps = PowerShell.Create();
 
             ps.AddScript(script);
             ps.Invoke();
@@ -171,15 +171,21 @@ New-PSDrive -Name Z -PSProvider FileSystem -Root \\192.168.64.2\security$ -Crede
                 return;
             }
 
-            //Connect to file server
-            string script = @"$secPassword = ConvertTo-SecureString ""G00dm@stertronic"" -AsPlainText -Force
+            PowerShell ps = PowerShell.Create();
+
+
+            if(!Directory.Exists(RP_PATH))
+            {
+                string script = @"$secPassword = ConvertTo-SecureString ""G00dm@stertronic"" -AsPlainText -Force
 $cred = new-object -typename System.Management.Automation.PSCredential -argumentlist Administrator, $secPassword
 New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Credential $cred -Persist";
 
-            PowerShell ps = PowerShell.Create();
-            ps.AddScript(script);
-            ps.Invoke();
 
+                ps.AddScript(script);
+                ps.Invoke();
+            }
+
+            
             // If the report exists for today? create!
             string date = DateTime.Now.ToString("yyyy-MM-dd-dddd");
             string reportFile = @"X:\" + "AttendanceReport-" + date + ".xlsx";
@@ -202,46 +208,73 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                 condIn.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
                 condOut.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
 
-
                 wbook.SaveAs(reportFile);
-                Console.WriteLine("File created");
-                
+                //Console.WriteLine("File created"); 
             }
 
-            Console.WriteLine("loading file...");
-            Workbook wb = excel.Workbooks.Open(reportFile);
-            Worksheet ws = wb.Worksheets[1];
-            var range = (Excel.Range)ws.Columns["A:A"];
-            var result = range.Find(name, LookAt: Excel.XlLookAt.xlWhole);
 
-            if (result != null)
+            //check if file is ready-only, other machine is using
+            Cursor.Current = Cursors.WaitCursor;
+            while (true)
             {
-                var row = result.Row;
-                ws.Cells[row,3].Value = DateTime.Now.ToString("HH:mm:ss:");
-                wb.Save();
-                wb.Close();
+                //attempt to satisfy some condition
+                bool isFileFree = FileHasWriteAccess(reportFile);
+                Console.WriteLine("Check File access Loop is: " + isFileFree);
+                if (isFileFree)
+                {
+                    Console.WriteLine("File has write access");
+                    Console.WriteLine("loading file...");
+                    Workbook wb = excel.Workbooks.Open(reportFile);
+                    Worksheet ws = wb.Worksheets[1];
+                    var range = (Excel.Range)ws.Columns["A:A"];
+                    var result = range.Find(name, LookAt: Excel.XlLookAt.xlWhole);
 
+                    if (result != null)
+                    {
+                        var row = result.Row;
+                        ws.Cells[row, 3].Value = DateTime.Now.ToString("HH:mm:ss:");
+                        wb.Save();
+                        wb.Close();
+                    }
+                    else
+                    {
+                        // cannot find the name
+                        //add to last row with clock in
+                        int lastRow = ws.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell).Row + 1;
+                        Console.WriteLine("last Row: " + lastRow);
+                        ws.Cells[lastRow, 1].Value = name;
+                        ws.Cells[lastRow, 2].Value = DateTime.Now.ToString("HH:mm:ss");
+                        wb.Save();
+                        wb.Close();
+                        Console.WriteLine("Save and close Excel WB");
+                    }
 
-
-            } else
-            {
-                // cannot find the name
-                //add to last row with clock in
-                int lastRow = ws.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell).Row + 1;
-                Console.WriteLine("last Row: " + lastRow);
-                ws.Cells[lastRow,1].Value = name;
-                ws.Cells[lastRow,2].Value = DateTime.Now.ToString("HH:mm:ss");
-                
-                wb.Save();
-                wb.Close();
-
+                    ps.AddScript(@"net use X: /delete");
+                    Console.WriteLine("terminated the drive");
+                    ps.Invoke();
+                    ps.Dispose();
+                    Console.WriteLine("File has ben Written, break the while");
+                    Cursor.Current = Cursors.Default;
+                    break;
+                }
             }
 
-            ps.AddScript(@"net use X: /delete");
-            ps.Invoke();
-            ps.Dispose();
+            
         }
 
+
+        public static bool FileHasWriteAccess(string Path)
+        {
+            try
+            {
+                System.IO.File.Open(Path, System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite).Dispose();
+                return true;
+            }
+            catch (System.IO.IOException)
+            {
+                return false;
+            }
+        }
 
     }
 }
