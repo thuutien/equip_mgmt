@@ -19,13 +19,14 @@ namespace Equipment_Mgmt
         static string RP_PATH = @"X:\";
 
 
-        static public Excel.Application excel = new Excel.Application();
+        //static public Excel.Application excel = new Excel.Application();
         public static Person[] persons = new Person[1000];
         public static System.Media.SoundPlayer errorSound = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Critical Stop.wav");
         public static System.Media.SoundPlayer passSound = new System.Media.SoundPlayer(@"C:\Windows\Media\tada.wav");
 
         public static void loadDatabase()
         {
+            Excel.Application excel = new Excel.Application();
             if (!File.Exists(DB_PATH))
             {
                 MessageBox.Show("Database not found: C:\\database\\db.xlsx \nPlease Update database or contact IT.");
@@ -122,6 +123,8 @@ namespace Equipment_Mgmt
 
             Console.WriteLine("Database Last Row: " + lastRow);
             Utils.logging("Users loaded:" + (lastRow - 1), "System Operation");
+            MyBook.Close();
+            excel.Quit();
         }
 
         public static void logging(string name, string deviceID)
@@ -164,6 +167,7 @@ New-PSDrive -Name Z -PSProvider FileSystem -Root \\192.168.64.2\security$ -Crede
 
         public static void recordTime(string name)
         {
+            Excel.Application excel = new Excel.Application();
             bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null ? true : false;
             if(!isExcelInstalled)
             {
@@ -255,6 +259,7 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                     ps.Dispose();
                     Console.WriteLine("File has ben Written, break the while");
                     Cursor.Current = Cursors.Default;
+                    excel.Quit();
                     break;
                 }
             }

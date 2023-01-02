@@ -13,14 +13,10 @@ namespace Equipment_Mgmt
         {
             InitializeComponent();
             initialTaks();
-            
-
-
         }
 
         private void initialTaks()
         {   
-            
             //Add enter event for textbox
             txt_equipID.KeyPress += (sndr, ev) =>
             {
@@ -31,8 +27,6 @@ namespace Equipment_Mgmt
                     
                 }
             };
-
-            
             //load database
             Utils.loadDatabase();
             
