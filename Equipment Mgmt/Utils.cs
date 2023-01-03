@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 using System.Management.Automation;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -19,31 +19,29 @@ namespace Equipment_Mgmt
         static string RP_PATH = @"X:\";
 
 
-        //static public Excel.Application excel = new Excel.Application();
+        public static Excel.Application excel = new Excel.Application();
         public static Person[] persons = new Person[1000];
         public static System.Media.SoundPlayer errorSound = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Critical Stop.wav");
         public static System.Media.SoundPlayer passSound = new System.Media.SoundPlayer(@"C:\Windows\Media\tada.wav");
 
         public static void loadDatabase()
         {
-            Excel.Application excel = new Excel.Application();
             if (!File.Exists(DB_PATH))
             {
                 MessageBox.Show("Database not found: C:\\database\\db.xlsx \nPlease Update database or contact IT.");
                 return;
             }
 
-            
-            if (excel == null)
+            bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null ? true : false;
+            if (!isExcelInstalled)
             {
-                Console.WriteLine("Excel is not installed");
+                MessageBox.Show("Excel is not installed!");
                 return;
             }
 
-            
-            excel.Visible = false; 
-            Excel.Workbook MyBook = excel.Workbooks.Open(Utils.DB_PATH);
-            Excel.Worksheet MySheet = (Excel.Worksheet)MyBook.Sheets[1];
+            //excel = new Excel.Application();
+            Workbook MyBook = excel.Workbooks.Open(Utils.DB_PATH);
+            Worksheet MySheet = (Worksheet)MyBook.Sheets[1];
             int lastRow = MySheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell).Row;
 
             for (int index = 2; index <= lastRow; index++)
@@ -123,8 +121,9 @@ namespace Equipment_Mgmt
 
             Console.WriteLine("Database Last Row: " + lastRow);
             Utils.logging("Users loaded:" + (lastRow - 1), "System Operation");
-            MyBook.Close();
+            MyBook.Close(true);
             excel.Quit();
+            Console.WriteLine("Excel quit at loading database");
         }
 
         public static void logging(string name, string deviceID)
@@ -161,39 +160,40 @@ New-PSDrive -Name Z -PSProvider FileSystem -Root \\192.168.64.2\security$ -Crede
             ps.Invoke();
             ps.AddScript(@"net use Z: /delete");
             ps.Invoke();
+            ps.Dispose();
             Cursor.Current = Cursors.Default;
             MessageBox.Show("Update completed!");
         }
 
+
+
+
+
+
         public static void recordTime(string name)
         {
-            Excel.Application excel = new Excel.Application();
+            Cursor.Current = Cursors.WaitCursor;
             bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null ? true : false;
             if(!isExcelInstalled)
             {
                 MessageBox.Show("Excel is not installed!");
                 return;
             }
-
             PowerShell ps = PowerShell.Create();
 
-
-            if(!Directory.Exists(RP_PATH))
+            if (!Directory.Exists(RP_PATH))
             {
                 string script = @"$secPassword = ConvertTo-SecureString ""G00dm@stertronic"" -AsPlainText -Force
 $cred = new-object -typename System.Management.Automation.PSCredential -argumentlist Administrator, $secPassword
 New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Credential $cred -Persist";
 
-
                 ps.AddScript(script);
                 ps.Invoke();
             }
 
-            
             // If the report exists for today? create!
             string date = DateTime.Now.ToString("yyyy-MM-dd-dddd");
             string reportFile = @"X:\" + "AttendanceReport-" + date + ".xlsx";
-            
 
             if (!File.Exists(reportFile))
             {
@@ -213,21 +213,22 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                 condOut.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
 
                 wbook.SaveAs(reportFile);
+                wbook.Close(true);
                 //Console.WriteLine("File created"); 
             }
 
 
             //check if file is ready-only, other machine is using
-            Cursor.Current = Cursors.WaitCursor;
+            
             while (true)
             {
                 //attempt to satisfy some condition
+                
                 bool isFileFree = FileHasWriteAccess(reportFile);
                 Console.WriteLine("Check File access Loop is: " + isFileFree);
+
                 if (isFileFree)
                 {
-                    Console.WriteLine("File has write access");
-                    Console.WriteLine("loading file...");
                     Workbook wb = excel.Workbooks.Open(reportFile);
                     Worksheet ws = wb.Worksheets[1];
                     var range = (Excel.Range)ws.Columns["A:A"];
@@ -237,8 +238,7 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                     {
                         var row = result.Row;
                         ws.Cells[row, 3].Value = DateTime.Now.ToString("HH:mm:ss:");
-                        wb.Save();
-                        wb.Close();
+                        
                     }
                     else
                     {
@@ -248,23 +248,27 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                         Console.WriteLine("last Row: " + lastRow);
                         ws.Cells[lastRow, 1].Value = name;
                         ws.Cells[lastRow, 2].Value = DateTime.Now.ToString("HH:mm:ss");
-                        wb.Save();
-                        wb.Close();
                         Console.WriteLine("Save and close Excel WB");
                     }
-
+                    Console.WriteLine("File has write access");
+                    Console.WriteLine("loading file...");
+                    //issue here
+                    
+                    wb.Save();
+                    wb.Close(true);
+                    Console.WriteLine("Closed Excel services");
                     ps.AddScript(@"net use X: /delete");
                     Console.WriteLine("terminated the drive");
                     ps.Invoke();
                     ps.Dispose();
                     Console.WriteLine("File has ben Written, break the while");
                     Cursor.Current = Cursors.Default;
-                    excel.Quit();
                     break;
                 }
             }
-
-            
+            //excel.Quit();
+            //Marshal.ReleaseComObject(excel);
+            ps.Dispose();
         }
 
 
@@ -280,6 +284,38 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                 return false;
             }
         }
+
+
+        public static void updateClockTime(string name)
+        {
+
+            Cursor.Current = Cursors.WaitCursor;
+            bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null ? true : false;
+            if (!isExcelInstalled)
+            {
+                MessageBox.Show("Excel is not installed!");
+                return;
+            }
+            PowerShell ps = PowerShell.Create();
+
+            if (!Directory.Exists(RP_PATH))
+            {
+                string script = @"$secPassword = ConvertTo-SecureString ""G00dm@stertronic"" -AsPlainText -Force
+$cred = new-object -typename System.Management.Automation.PSCredential -argumentlist Administrator, $secPassword
+New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Credential $cred -Persist";
+
+                ps.AddScript(script);
+                ps.Invoke();
+            }
+
+            // If the report exists for today? create!
+            string date = DateTime.Now.ToString("yyyy-MM-dd-dddd");
+            string reportFile = @"X:\" + "AttendanceReport-" + date + ".xlsx";
+
+        }
+
+
+
 
     }
 }

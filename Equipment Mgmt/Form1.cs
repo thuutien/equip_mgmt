@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Excel;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -29,8 +30,7 @@ namespace Equipment_Mgmt
             };
             //load database
             Utils.loadDatabase();
-            
-
+            txt_equipID.Focus();    
         }
 
         private void locateUser(string eqiptID)
@@ -60,10 +60,9 @@ namespace Equipment_Mgmt
                             lbl_employeeName.Text = person.FirstName + " " + person.LastName;
                             lbl_employeeName.ForeColor = System.Drawing.Color.DarkGreen;
                             txt_equipID.Clear();
-                            //Utils.logging(person.FirstName, eqiptID);
                             Utils.recordTime(person.FirstName + " " + person.LastName);
-                            //Utils.logging(person.FirstName, eqiptID);
-                             
+
+                            
                             return;
                         }           
                     }

@@ -171,7 +171,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1495, 891);
+            this.CausesValidation = false;
+            this.ClientSize = new System.Drawing.Size(1491, 887);
             this.ControlBox = false;
             this.Controls.Add(this.btn_update);
             this.Controls.Add(this.lbl_bypass);
