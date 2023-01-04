@@ -30,11 +30,12 @@ namespace Equipment_Mgmt
             };
             //load database
             Utils.loadDatabase();
-            txt_equipID.Focus();    
+               
         }
 
         private void locateUser(string eqiptID)
         {
+            Cursor.Current = Cursors.WaitCursor;
             lbl_scanned.Text = eqiptID;
             Person[] persons = Utils.persons;
             foreach (Person person in persons)
@@ -48,8 +49,10 @@ namespace Equipment_Mgmt
                         if (id == eqiptID)
                         {
                             //Passed
+                            Utils.updateClock(person.FirstName + " " + person.LastName);
                             checkTitles(person);
                             Utils.passSound.Play();
+                            txt_equipID.Clear();
                             if (File.Exists(@"C:\database\profile\" + person.FirstName + ".jpg"))
                             {
                                 pic_profile.Image = System.Drawing.Image.FromFile(@"C:\database\profile\" + person.FirstName + ".jpg");
@@ -59,26 +62,26 @@ namespace Equipment_Mgmt
                             }
                             lbl_employeeName.Text = person.FirstName + " " + person.LastName;
                             lbl_employeeName.ForeColor = System.Drawing.Color.DarkGreen;
-                            txt_equipID.Clear();
-                            Utils.recordTime(person.FirstName + " " + person.LastName);
-
-                            
+                            //Utils.recordTime(person.FirstName + " " + person.LastName);
+                            Cursor.Current = Cursors.Default;
                             return;
                         }           
                     }
 
                 }
             }
+            
 
             //Failed
             Utils.errorSound.Play();
+            txt_equipID.Clear();
             pic_profile.Image = Properties.Resources.error;
             lbl_employeeName.Text = "WARNING! No User Found!!";
             lbl_employeeName.ForeColor = System.Drawing.Color.Red;
             Utils.logging("USER FAILED", eqiptID);
             lbl_title.Text = "";
             lbl_bypass.Text = "";
-            txt_equipID.Clear();
+            Cursor.Current = Cursors.Default;
         }
 
         private void checkTitles(Person person)
@@ -137,6 +140,8 @@ namespace Equipment_Mgmt
         {
             Utils.updateDB();
             Utils.loadDatabase();
+            
+
 
         }
     }

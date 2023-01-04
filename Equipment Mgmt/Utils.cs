@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 using System.Management.Automation;
-using System.Runtime.InteropServices;
+using System.Data.OleDb;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -229,7 +229,9 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
 
                 if (isFileFree)
                 {
+                    //issue here
                     Workbook wb = excel.Workbooks.Open(reportFile);
+
                     Worksheet ws = wb.Worksheets[1];
                     var range = (Excel.Range)ws.Columns["A:A"];
                     var result = range.Find(name, LookAt: Excel.XlLookAt.xlWhole);
@@ -253,7 +255,12 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                     Console.WriteLine("File has write access");
                     Console.WriteLine("loading file...");
                     //issue here
-                    
+                    if (wb.ReadOnly)
+                    {
+                        wb.Close(true);
+                        continue;
+                    }
+
                     wb.Save();
                     wb.Close(true);
                     Console.WriteLine("Closed Excel services");
@@ -286,35 +293,39 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
         }
 
 
-        public static void updateClockTime(string name)
+        public static void updateClock(string name)
         {
+            //check datab if exist
+            ADatabaseLibary.CreateDB();
 
-            Cursor.Current = Cursors.WaitCursor;
-            bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null ? true : false;
-            if (!isExcelInstalled)
+            //update entry
+            try
             {
-                MessageBox.Show("Excel is not installed!");
-                return;
+                ADatabaseLibary.findRecord(name);
             }
-            PowerShell ps = PowerShell.Create();
-
-            if (!Directory.Exists(RP_PATH))
+            catch (Exception ex) 
             {
-                string script = @"$secPassword = ConvertTo-SecureString ""G00dm@stertronic"" -AsPlainText -Force
-$cred = new-object -typename System.Management.Automation.PSCredential -argumentlist Administrator, $secPassword
-New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Credential $cred -Persist";
+                Console.WriteLine(ex);
+                try
+                {
+                    ADatabaseLibary.findRecord(name);
+                    Console.WriteLine("Second try");
+                } catch(Exception ex2)
+                {
+                    Console.WriteLine(ex2);
+                }
+                
+                
 
-                ps.AddScript(script);
-                ps.Invoke();
             }
 
-            // If the report exists for today? create!
-            string date = DateTime.Now.ToString("yyyy-MM-dd-dddd");
-            string reportFile = @"X:\" + "AttendanceReport-" + date + ".xlsx";
+            
+
+            
+ 
+            
 
         }
-
-
 
 
     }
