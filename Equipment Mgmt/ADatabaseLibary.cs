@@ -51,7 +51,7 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                 con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + reportFile());
                 cmd = new OleDbCommand();
                 cmd.Connection = con;
-                cmd.CommandText = $"CREATE TABLE Report([Name] text, [ClockIn] Time, [ClockOut] Time)";
+                cmd.CommandText = $"CREATE TABLE Report([Name] text, [ClockIn] text, [ClockOut] text)";
                 con.Open();
                 cmd.ExecuteNonQuery();
                 con.Close();
@@ -71,7 +71,7 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
 
         public static void findRecord(string name)
         {
-            string time = DateTime.Now.ToString("HH:mm:ss");
+            string time = DateTime.Now.ToString("HH:mm:ss:tt");
             con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + reportFile());
             con.Open();
             Console.WriteLine("Updating for: " + name);
