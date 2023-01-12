@@ -293,7 +293,7 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
         }
 
 
-        public static void updateClock(string name)
+        public static void updateClock(string name, string role)
         {
             //check datab if exist
             ADatabaseLibary.CreateDB();
@@ -301,14 +301,14 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
             //update entry
             try
             {
-                ADatabaseLibary.findRecord(name);
+                ADatabaseLibary.findRecord(name, role);
             }
             catch (Exception ex) 
             {
                 Console.WriteLine(ex);
                 try
                 {
-                    ADatabaseLibary.findRecord(name);
+                    ADatabaseLibary.findRecord(name, role);
                     Console.WriteLine("Second try");
                 } catch(Exception ex2)
                 {

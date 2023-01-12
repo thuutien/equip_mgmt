@@ -49,7 +49,7 @@ namespace Equipment_Mgmt
                         if (id == eqiptID)
                         {
                             //Passed
-                            Utils.updateClock(person.FirstName + " " + person.LastName);
+                            Utils.updateClock(person.FirstName + " " + person.LastName, person.Title);
                             checkTitles(person);
                             Utils.passSound.Play();
                             txt_equipID.Clear();
@@ -86,7 +86,7 @@ namespace Equipment_Mgmt
 
         private void checkTitles(Person person)
         {
-            if (person.Title != null && person.Title != "")
+            if (person.Title != null && person.Title != "" && person.Title != "Manager" && person.Title != "Supervisor")
             {
                 lbl_title.Text = "EXECUTIVE: " + person.Title;
                 lbl_bypass.Text = "SECURITY BYPASS";

@@ -51,7 +51,7 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                 con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + reportFile());
                 cmd = new OleDbCommand();
                 cmd.Connection = con;
-                cmd.CommandText = $"CREATE TABLE Report([Name] text, [ClockIn] text, [ClockOut] text)";
+                cmd.CommandText = $"CREATE TABLE Report([Name] text, [ClockIn] text, [ClockOut] text, [Role] text)";
                 con.Open();
                 cmd.ExecuteNonQuery();
                 con.Close();
@@ -69,7 +69,7 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
         
 
 
-        public static void findRecord(string name)
+        public static void findRecord(string name, string role)
         {
             string time = DateTime.Now.ToString("HH:mm:ss:tt");
             con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + reportFile());
@@ -83,9 +83,10 @@ New-PSDrive -Name X -PSProvider FileSystem -Root \\192.168.64.2\reports$ -Creden
                 if (rowsAffected == 0)
                 {
                     command.Parameters.Clear();
-                    command.CommandText = "INSERT INTO Report (Name, ClockIn) VALUES (@name,@clockin)";
+                    command.CommandText = "INSERT INTO Report (Name, ClockIn, Role) VALUES (@name,@clockin,@role)";
                     command.Parameters.AddWithValue("@name", name);
                     command.Parameters.AddWithValue("@clockin", time);
+                    command.Parameters.AddWithValue("@role", role);
                     command.ExecuteNonQuery();
                 }
 
