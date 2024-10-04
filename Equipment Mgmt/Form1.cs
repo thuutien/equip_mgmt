@@ -154,8 +154,10 @@ namespace Equipment_Mgmt
 
 
         void intervalTask(object s, EventArgs e)
+
         {
             DBAccess.GetAllEmployees();
+            Utils.GetProfilesImages();
         }
 
         void StartDispatchTask()
